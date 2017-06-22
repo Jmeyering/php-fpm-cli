@@ -24,6 +24,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+#First time execution dependency install (Ubuntu only)
+
+if [ $(lsb_release -a 2>/dev/null | grep -c "Ubuntu") = 2 ] && [ ! -f $HOME/.php-fpm-cli ] && [ $(dpkg-query -W -f='${Status}' libfcgi0ldbl 2>/dev/null | grep -c "ok installed") = 0 ]; then
+    echo "This application depends on libfcgi0ldbl, which is not installed on your system. This script will install it now.";
+    sudo apt-get install libfcgi0ldbl;
+    echo ' ' > $HOME/.php-fpm-cli;
+   elif [ $(lsb_release -a 2>/dev/null | grep -c "Ubuntu") -eq 2 ] && [ $(dpkg-query -W -f='${Status}' libfcgi0ldbl 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+    echo ' ' > $HOME/.php-fpm-cli;
+fi
+
+
 usage() {
     cat <<USAGE
 Usage: $(basename $0) [-connect CONN] -r <code>
